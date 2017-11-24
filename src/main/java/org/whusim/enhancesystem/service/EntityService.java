@@ -6,12 +6,11 @@ import org.whusim.enhancesystem.repository.EntityRepository;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
+import java.util.List;
 
 
 @Service
 public class EntityService {
-//    @PersistenceContext
-//    private EntityManager em;
 
     @Resource
     private EntityRepository entityRepository;
@@ -21,12 +20,12 @@ public class EntityService {
         return entityRepository.findAll();
     }
     @Transactional
-    public Iterable<EntityValue> findEntityValuesByMentionid(int mentionid) {
-        return entityRepository.findEntityValuesByMentionid(mentionid);
+    public List<EntityValue> findAllByEntity(String entity) {
+        return entityRepository.findAllByEntity(entity);
     }
     @Transactional
-    public EntityValue findOneentity(int i) {
-        return entityRepository.findEntityValueByEntityid(i);
+    public EntityValue findOneentity(int id) {
+        return entityRepository.findEntityValueById(id);
     }
 
     @Transactional

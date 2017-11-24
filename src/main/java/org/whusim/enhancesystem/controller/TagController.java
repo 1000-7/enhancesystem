@@ -17,7 +17,7 @@ public class TagController {
     @Resource
     private TagService tagService;
 
-    @RequestMapping(path = "/add")
+    @RequestMapping(path = "/tag/add")
     public Tag add(@RequestParam(value = "entityid", required = false, defaultValue = "1") String entityid
             , @RequestParam(value = "tagname", required = false, defaultValue = "1") String tagname
             , @RequestParam(value = "tagvalue", required = false, defaultValue = "1") String tagvalue){

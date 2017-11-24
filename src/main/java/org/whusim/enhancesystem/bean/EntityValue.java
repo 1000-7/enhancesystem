@@ -10,40 +10,26 @@ import javax.persistence.Id;
 public class EntityValue {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int entityid;
-    private int mentionid;
+    private int id;
     private String entity;
-    private String description;
+    private String tag;
+    private String attribute;
 
     public EntityValue() {
     }
 
-
-    public EntityValue(String entity, String description) {
+    public EntityValue(String entity, String tag, String attribute) {
         this.entity = entity;
-        this.description = description;
+        this.tag = tag;
+        this.attribute = attribute;
     }
 
-    public EntityValue(int mentionid, String entity, String description) {
-        this.mentionid = mentionid;
-        this.entity = entity;
-        this.description = description;
+    public int getId() {
+        return id;
     }
 
-    public int getMentionid() {
-        return mentionid;
-    }
-
-    public void setMentionid(int mentionid) {
-        this.mentionid = mentionid;
-    }
-
-    public int getEntityid() {
-        return entityid;
-    }
-
-    public void setEntityid(int entityid) {
-        this.entityid = entityid;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getEntity() {
@@ -54,11 +40,19 @@ public class EntityValue {
         this.entity = entity;
     }
 
-    public String getDescription() {
-        return description;
+    public String getTag() {
+        return tag;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
+
+    public String getAttribute() {
+        return attribute;
+    }
+
+    public void setAttribute(String attribute) {
+        this.attribute = attribute;
     }
 }
