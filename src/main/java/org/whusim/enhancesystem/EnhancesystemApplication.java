@@ -18,8 +18,6 @@ public class EnhancesystemApplication {
         SpringApplication.run(EnhancesystemApplication.class, args);
     }
 
-    @RequestMapping("/")
-    String home() {
-        return "Hello World!";
-    }
+
+
 }

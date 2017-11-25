@@ -4,17 +4,15 @@ import com.hankcs.hanlp.HanLP;
 import org.ansj.domain.Term;
 import org.ansj.recognition.impl.SynonymsRecgnition;
 import org.ansj.splitWord.analysis.NlpAnalysis;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.context.annotation.RequestScope;
 import org.springframework.web.servlet.ModelAndView;
-import org.whusim.enhancesystem.bean.*;
+import org.whusim.enhancesystem.bean.EntityJson;
+import org.whusim.enhancesystem.bean.EntityValue;
+import org.whusim.enhancesystem.bean.Tag_Attributes;
 import org.whusim.enhancesystem.service.EntityService;
-import org.whusim.enhancesystem.service.MentionService;
-import org.whusim.enhancesystem.service.TagService;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -40,7 +38,8 @@ public class EntityController {
 
 
     @RequestMapping(path = "/entity/findall")
-    public ModelAndView findAllEntity(@RequestParam(value = "text", required = false, defaultValue = "姚明在上海有个大房子武钢") String text) {
+    //RequestParam(value = "text", required = false, defaultValue = "姚明在上海有个大房子武钢")
+    public ResponseEntity<?> findAllEntity(String text) {
         Set<String> expectedNature = new HashSet<String>() {{
             add("nr");
             add("ns");
@@ -48,40 +47,40 @@ public class EntityController {
             add("nz");
             add("userDefine");
         }};
-        SynonymsRecgnition synonymsRecgnition = new SynonymsRecgnition();
+        //SynonymsRecgnition synonymsRecgnition = new SynonymsRecgnition();
         text = HanLP.convertToSimplifiedChinese(text);
-        //List<Term> terms = NlpAnalysis.parse(text).getTerms();
+        List<Term> terms = NlpAnalysis.parse(text).getTerms();
         List<EntityJson> entityJsons = new ArrayList<>();
-        for (Term term : NlpAnalysis.parse(text).recognition(synonymsRecgnition)) {
+        for (Term term : terms) {
             String word = term.getName(); //拿到词
             String natureStr = term.getNatureStr(); //拿到词性
             if (expectedNature.contains(natureStr)) {
                 System.out.println(word);
                 try {
-                    if (term.getSynonyms().size()!=0) {
-                        List<String> synonyms = term.getSynonyms();
-                        for (String synonymsWord: synonyms) {
-                            try {
-                                List<EntityValue> entityValue = entityService.findAllByEntity(synonymsWord);
-                                EntityJson entityJson=EntityController.list2json(entityValue);
-                                entityJsons.add(entityJson);
-                            } catch (IndexOutOfBoundsException e) {
-                                continue;
-                            }
-                        }
-                    }
-                    else{
+//                    if (term.getSynonyms().size()!=0) {
+//                        List<String> synonyms = term.getSynonyms();
+//                        for (String synonymsWord: synonyms) {
+//                            try {
+//                                List<EntityValue> entityValue = entityService.findAllByEntity(synonymsWord);
+//                                EntityJson entityJson=EntityController.list2json(entityValue);
+//                                entityJsons.add(entityJson);
+//                            } catch (IndexOutOfBoundsException e) {
+//                                continue;
+//                            }
+//                        }
+//                    }
+//                    else{
                         List<EntityValue> entityValue = entityService.findAllByEntity(word);
                         EntityJson entityJson=EntityController.list2json(entityValue);
                         entityJsons.add(entityJson);
-                    }
+                    //}
                 }catch (IndexOutOfBoundsException e){
                     continue;
                 }
 
             }
         }
-        return new ModelAndView("index", "entityjsons", entityJsons);
+        return ResponseEntity.ok(entityJsons);
     }
 
 
