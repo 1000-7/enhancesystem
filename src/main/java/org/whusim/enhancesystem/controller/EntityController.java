@@ -40,7 +40,7 @@ public class EntityController {
 
 
     @RequestMapping(path = "/entity/findall")
-    public ModelAndView findAllEntity(@RequestParam(value = "text", required = false, defaultValue = "姚明在上海有个大房子") String text) {
+    public ModelAndView findAllEntity(@RequestParam(value = "text", required = false, defaultValue = "姚明在上海有个大房子武钢") String text) {
         Set<String> expectedNature = new HashSet<String>() {{
             add("nr");
             add("ns");
@@ -61,9 +61,13 @@ public class EntityController {
                     if (term.getSynonyms().size()!=0) {
                         List<String> synonyms = term.getSynonyms();
                         for (String synonymsWord: synonyms) {
-                            List<EntityValue> entityValue = entityService.findAllByEntity(synonymsWord);
-                            EntityJson entityJson=EntityController.list2json(entityValue);
-                            entityJsons.add(entityJson);
+                            try {
+                                List<EntityValue> entityValue = entityService.findAllByEntity(synonymsWord);
+                                EntityJson entityJson=EntityController.list2json(entityValue);
+                                entityJsons.add(entityJson);
+                            } catch (IndexOutOfBoundsException e) {
+                                continue;
+                            }
                         }
                     }
                     else{
