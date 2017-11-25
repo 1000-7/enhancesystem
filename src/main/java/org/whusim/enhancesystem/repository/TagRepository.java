@@ -7,6 +7,6 @@ import org.whusim.enhancesystem.bean.Tag;
 import java.util.List;
 
 
-public interface TagRepository extends PagingAndSortingRepository<Tag,Integer> {
+public interface  TagRepository extends PagingAndSortingRepository<Tag,Integer> {
     List<Tag> findAllByEntityid(int entityid);
 }
