@@ -1,6 +1,8 @@
 package org.whusim.enhancesystem.controller;
 
+import com.hankcs.hanlp.HanLP;
 import org.ansj.domain.Term;
+import org.ansj.recognition.impl.SynonymsRecgnition;
 import org.ansj.splitWord.analysis.NlpAnalysis;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -46,17 +48,29 @@ public class EntityController {
             add("nz");
             add("userDefine");
         }};
-        List<Term> terms = NlpAnalysis.parse(text).getTerms();
+        SynonymsRecgnition synonymsRecgnition = new SynonymsRecgnition();
+        text = HanLP.convertToSimplifiedChinese(text);
+        //List<Term> terms = NlpAnalysis.parse(text).getTerms();
         List<EntityJson> entityJsons = new ArrayList<>();
-        for (Term term : terms) {
+        for (Term term : NlpAnalysis.parse(text).recognition(synonymsRecgnition)) {
             String word = term.getName(); //拿到词
             String natureStr = term.getNatureStr(); //拿到词性
             if (expectedNature.contains(natureStr)) {
                 System.out.println(word);
                 try {
-                    List<EntityValue> entityValue = entityService.findAllByEntity(word);
-                    EntityJson entityJson=EntityController.list2json(entityValue);
-                    entityJsons.add(entityJson);
+                    if (term.getSynonyms().size()!=0) {
+                        List<String> synonyms = term.getSynonyms();
+                        for (String synonymsWord: synonyms) {
+                            List<EntityValue> entityValue = entityService.findAllByEntity(synonymsWord);
+                            EntityJson entityJson=EntityController.list2json(entityValue);
+                            entityJsons.add(entityJson);
+                        }
+                    }
+                    else{
+                        List<EntityValue> entityValue = entityService.findAllByEntity(word);
+                        EntityJson entityJson=EntityController.list2json(entityValue);
+                        entityJsons.add(entityJson);
+                    }
                 }catch (IndexOutOfBoundsException e){
                     continue;
                 }
