@@ -44,36 +44,41 @@ public class EntityController {
             add("nr");
             add("ns");
             add("nt");
-            add("nz");
+            add("n");
+            //add("nz");
             add("userDefine");
         }};
-        //SynonymsRecgnition synonymsRecgnition = new SynonymsRecgnition();
+        SynonymsRecgnition synonymsRecgnition = new SynonymsRecgnition();
         text = HanLP.convertToSimplifiedChinese(text);
-        List<Term> terms = NlpAnalysis.parse(text).getTerms();
+        //List<Term> terms = NlpAnalysis.parse(text).getTerms();
         List<EntityJson> entityJsons = new ArrayList<>();
-        for (Term term : terms) {
+        for (Term term : NlpAnalysis.parse(text).recognition(synonymsRecgnition)) {
             String word = term.getName(); //拿到词
             String natureStr = term.getNatureStr(); //拿到词性
             if (expectedNature.contains(natureStr)) {
                 System.out.println(word);
                 try {
-//                    if (term.getSynonyms().size()!=0) {
-//                        List<String> synonyms = term.getSynonyms();
-//                        for (String synonymsWord: synonyms) {
-//                            try {
-//                                List<EntityValue> entityValue = entityService.findAllByEntity(synonymsWord);
-//                                EntityJson entityJson=EntityController.list2json(entityValue);
-//                                entityJsons.add(entityJson);
-//                            } catch (IndexOutOfBoundsException e) {
-//                                continue;
-//                            }
-//                        }
-//                    }
-//                    else{
-                        List<EntityValue> entityValue = entityService.findAllByEntity(word);
-                        EntityJson entityJson=EntityController.list2json(entityValue);
+                    List<EntityValue> entityValue = entityService.findAllByEntity(word);
+                    if(entityValue.isEmpty()){
+
+                        List<String> synonyms = term.getSynonyms();
+                        if(synonyms==null){
+                            continue;
+                        }
+                        for (String synonymsWord: synonyms) {
+                            entityValue = entityService.findAllByEntity(synonymsWord);
+                            if(entityValue.isEmpty()){
+                                continue;
+                            }
+                            EntityJson entityJson=EntityController.list2json(word, entityValue);
+                            entityJsons.add(entityJson);
+                            break;
+                        }
+                    }
+                    else {
+                        EntityJson entityJson = EntityController.list2json(word, entityValue);
                         entityJsons.add(entityJson);
-                    //}
+                    }
                 }catch (IndexOutOfBoundsException e){
                     continue;
                 }
@@ -85,12 +90,14 @@ public class EntityController {
 
 
 
-    public static EntityJson list2json(List<EntityValue> entityValues){
+    public static EntityJson list2json(String word,List<EntityValue> entityValues){
         EntityJson entityJson = new EntityJson();
-        String entity=entityValues.get(0).getEntity();
+        //String entity=entityValues.get(0).getEntity();
+        String entity = word;
         List<Tag_Attributes>attributes=new ArrayList<>();
         for (EntityValue entityValue:entityValues){
-            Tag_Attributes attribute=new Tag_Attributes(entityValue.getTag(),entityValue.getAttribute());
+            String attribute_modify = entityValue.getAttribute().replaceAll("<a>","").replaceAll("</a>","");
+            Tag_Attributes attribute=new Tag_Attributes(entityValue.getTag(),attribute_modify);
             attributes.add(attribute);
         }
         entityJson.setEntity(entity);

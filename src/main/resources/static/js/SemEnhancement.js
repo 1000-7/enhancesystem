@@ -82,7 +82,7 @@ function hilightText(nodes){
         showContent += this.tag+':'+this.attribute+'<br/>';
        });
        reg=new RegExp(json2[i].entity+"(?!([^<]*>)|([^<]*<\/a>))","ig");
-       c = c.replace( reg,"<a data-toggle='tooltip'data-placement='bottom' data-html='true' title='"+showContent+"' style='color:#1C86EE' href='"+showContent+"'>"+json2[i].entity+"</a>");
+       c = c.replace( reg,"<span data-toggle='tooltip'data-placement='bottom' data-html='true' title='"+showContent+"' style='color:#1C86EE' href='"+showContent+"'>"+json2[i].entity+"</span>");
       }
         this.innerHTML=c;
         $("[data-toggle='tooltip']").tooltip();
