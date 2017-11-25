@@ -37,7 +37,7 @@ public class EntityController {
 
 
 
-    @RequestMapping(path = "/findall")
+    @RequestMapping(path = "/entity/findall")
     public ModelAndView findAllEntity(@RequestParam(value = "text", required = false, defaultValue = "姚明在上海有个大房子") String text) {
         Set<String> expectedNature = new HashSet<String>() {{
             add("nr");
