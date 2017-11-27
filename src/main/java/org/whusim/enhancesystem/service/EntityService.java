@@ -33,4 +33,24 @@ public class EntityService {
         return entityRepository.save(en);
     }
 
+    @Transactional
+    public void deleteByTagAndEntity(String entity, String tag){
+        entityRepository.deleteByEntityAndTag(entity, tag);
+    }
+
+    @Transactional
+    public void deleteByEntity(String entity){
+        entityRepository.deleteByEntity(entity);
+    }
+
+    @Transactional
+    public void update(String entity, String tag, String attribute){
+        entityRepository.updateEntity(entity, tag, attribute );
+    }
+
+    @Transactional
+    public void update(String entity, String tag, String oldattribute, String newattribute){
+        entityRepository.updateEntityAttribute(entity, tag, oldattribute, newattribute );
+    }
+
 }

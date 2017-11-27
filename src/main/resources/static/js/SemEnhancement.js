@@ -55,7 +55,7 @@ function getContentByMethods(method,tag){
     getContentText(contentNodes);
     $.ajax({
         type:'post',
-        url:'http://localhost:8080/entity/findall',
+        url:'http://localhost:8081/entity/findall',
         data:{
             text:contentTextAll
         },
