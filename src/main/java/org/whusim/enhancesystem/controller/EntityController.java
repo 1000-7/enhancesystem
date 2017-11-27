@@ -35,6 +35,49 @@ public class EntityController {
         return entityService.save(entityValue);
     }
 
+    @RequestMapping(path = "/entity/deleteonetag")
+    public void deleteByTagAndEntity(@RequestParam(value = "entity", required = false, defaultValue = "姚明") String entity
+            , @RequestParam(value = "tag", required = false, defaultValue = "1") String tag) {
+
+        //EntityValue entityValue = new EntityValue(entity, tag);
+        entityService.deleteByTagAndEntity(entity, tag);
+    }
+
+    @RequestMapping(path = "/entity/deleteoneentity")
+    public void deleteByEntity(@RequestParam(value = "entity", required = false, defaultValue = "1") String entity) {
+
+        //EntityValue entityValue = new EntityValue(entity, tag, attribute);
+        entityService.deleteByEntity(entity);
+    }
+
+    @RequestMapping(path = "/entity/updateentity")
+    public void updateentity(@RequestParam(value = "entity", required = false, defaultValue = "1") String entity
+            , @RequestParam(value = "tag", required = false, defaultValue = "1") String tag
+            , @RequestParam(value = "attribute", required = false, defaultValue = "1") String attribute) {
+
+        //EntityValue entityValue = new EntityValue(entity, tag, attribute);
+        entityService.update(entity, tag, attribute);
+    }
+
+    @RequestMapping(path = "/entity/updateattribute")
+    public void updateentityattribute(@RequestParam(value = "entity", required = false, defaultValue = "苹果公司") String entity
+            , @RequestParam(value = "tag", required = false, defaultValue = "d sa d") String tag
+            , @RequestParam(value = "attribute", required = false, defaultValue = "dasada d s") String oldattribute,
+                             @RequestParam(value = "attribute", required = false, defaultValue = "1") String newattribute) {
+
+        //EntityValue entityValue = new EntityValue(entity, tag, attribute);
+        entityService.update(entity, tag, oldattribute, newattribute);
+    }
+
+    @RequestMapping(path = "/entity/select")
+    public List<EntityValue> selectentity(@RequestParam(value = "entity", required = false, defaultValue = "1") String entity
+            , @RequestParam(value = "tag", required = false, defaultValue = "1") String tag
+            , @RequestParam(value = "attribute", required = false, defaultValue = "1") String attribute) {
+
+        EntityValue entityValue = new EntityValue(entity, tag, attribute);
+        return entityService.findAllByEntity(entity);
+    }
+
 
 
     @RequestMapping(path = "/entity/findall")
