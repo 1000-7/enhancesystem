@@ -24,8 +24,7 @@ import java.util.Set;
 public class EntityController {
     @Resource
     private EntityService entityService;
-
-
+    
     @RequestMapping(path = "/entity/add")
     public EntityValue addentity(@RequestParam(value = "entity", required = false, defaultValue = "1") String entity
             , @RequestParam(value = "tag", required = false, defaultValue = "1") String tag
